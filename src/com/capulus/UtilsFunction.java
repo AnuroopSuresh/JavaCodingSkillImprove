@@ -8,6 +8,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class UtilsFunction {
+
+    public static boolean gateTest;
+    public UtilsFunction(){
+        gateTest = true;
+    }
+
     public static List<Integer> sieveOfEratosthenes(int max,int min) {
         boolean prime[] = new boolean[max + 1];
         Arrays.fill(prime, true);

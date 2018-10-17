@@ -49,20 +49,47 @@ package com.capulus;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-public class BestIndex{
+public class BestIndex {
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int sizeOfArray = Integer.parseInt(br.readLine());
+        int lengthOfInput = Integer.parseInt(br.readLine());
         String[] inputNumberString = br.readLine().split("\\s");
-        List<Integer> inputList = new ArrayList<>();
-        for(String s:inputNumberString){
-            inputList.add(Integer.parseInt(s));
+        Queue<Integer> inputNumbers = new LinkedList<>();
+        for (String s : inputNumberString) {
+            inputNumbers.add(Integer.parseInt(s));
         }
 
+        //perform Best Index operation
+        ArrayList<Integer> bestIndexList = new ArrayList<>();
+        boolean done = true;
+        int loopCounter = 0, lengthOfInputTemp = lengthOfInput, i, numberOfElementsToPoll = 1, pollCounter = 1, pollLoop;
+        Queue<Integer> tempInput;
+        do {
+            boolean possibleToPoll = true;
+            loopCounter++;
+            tempInput = new LinkedList<>(inputNumbers);
+            System.out.println("BestIndex:main: Length of Queue: " + tempInput.size() + " length of temp Input " + lengthOfInputTemp);
 
+        } while (done);
+
+    }
+
+    private static boolean possibleToRemove(int length, int counter) {
+        return false;
+    }
+
+    public static int sumOfQueue(Queue<Integer> integerQueue, int numberOfElements) {
+        int sum = 0;
+        try {
+            for (int i = 0; i < numberOfElements; i++) {
+                sum = sum + integerQueue.remove();
+            }
+        } catch (NoSuchElementException n) {
+            return Integer.MIN_VALUE;
+        }
+        return sum;
     }
 
 }
