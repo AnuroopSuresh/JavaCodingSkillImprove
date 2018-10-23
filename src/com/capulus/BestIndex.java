@@ -50,41 +50,62 @@ package com.capulus;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
-public class BestIndex {
+/*public class BestIndex {
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int lengthOfInput = Integer.parseInt(br.readLine());
-        String[] inputNumberString = br.readLine().split("\\s");
+        String[] inputNumberString = br.readLine().split("\\s+");
         Queue<Integer> inputNumbers = new LinkedList<>();
         for (String s : inputNumberString) {
-            inputNumbers.add(Integer.parseInt(s));
+
+                inputNumbers.add(Integer.parseInt(s));
         }
 
         //perform Best Index operation
         ArrayList<Integer> bestIndexList = new ArrayList<>();
         boolean done = true;
-        int loopCounter = 0, lengthOfInputTemp = lengthOfInput, i, numberOfElementsToPoll = 1, pollCounter = 1, pollLoop;
         Queue<Integer> tempInput;
         do {
-            boolean possibleToPoll = true;
-            loopCounter++;
-            tempInput = new LinkedList<>(inputNumbers);
-            System.out.println("BestIndex:main: Length of Queue: " + tempInput.size() + " length of temp Input " + lengthOfInputTemp);
+            if (inputNumbers.size() > 0) {
+                tempInput=new LinkedList<>(inputNumbers);
+                boolean keepRemoving = true;
+                int numberOfElementsToRemove = 1;
+                int totalSum = 0;
+                while (keepRemoving) {
+                    if (tempInput.size() >= numberOfElementsToRemove) {
+                        totalSum += removeNElementsAndSum(numberOfElementsToRemove, tempInput);
+                    } else {
+                        keepRemoving = false;
+                    }
+                    numberOfElementsToRemove++;
+                }
+                bestIndexList.add(totalSum);
+                try {
+                    inputNumbers.remove();
+                } catch (NoSuchElementException n) {
+                    done = false;
+                }
+            } else {
+                done = false;
+            }
 
         } while (done);
 
+
+        System.out.println("BestIndex:main: Result List" + bestIndexList.toString());
+
     }
 
-    private static boolean possibleToRemove(int length, int counter) {
-        return false;
-    }
-
-    public static int sumOfQueue(Queue<Integer> integerQueue, int numberOfElements) {
-        int sum = 0;
+    public static int removeNElementsAndSum(int numberOfElementsToRemove, Queue<Integer> inputQueue) {
+        int sum = 0, i;
         try {
-            for (int i = 0; i < numberOfElements; i++) {
-                sum = sum + integerQueue.remove();
+            for (i = 0; i < numberOfElementsToRemove; i++) {
+                sum += inputQueue.remove();
             }
         } catch (NoSuchElementException n) {
             return Integer.MIN_VALUE;
@@ -92,4 +113,93 @@ public class BestIndex {
         return sum;
     }
 
+}*/
+
+public class BestIndex {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        long start,end;
+
+        int lengthOfInput = Integer.parseInt(br.readLine());
+        String[] inputNumberStringArray = br.readLine().split("\\s+");
+        ArrayList<Integer> inputList = new ArrayList<>();
+        for(String numberString:inputNumberStringArray){
+            inputList.add(Integer.parseInt(numberString));
+        }
+        start = System.nanoTime();
+        long sumofList = sumofList(inputList,lengthOfInput);
+        long initialSum = sumofList;
+        int maxIndexToAdd = getTheMaxIndexToAddWhenLengthIsKnown(lengthOfInput);
+        int numberOfElementsToRemove = lengthOfInput-maxIndexToAdd;
+        if(numberOfElementsToRemove>0){
+            for(int i=maxIndexToAdd;i<lengthOfInput;i++){
+                initialSum-=inputList.get(i);
+            }
+        }
+        long max = initialSum,tempSum=0;
+        int tempLength = lengthOfInput;
+
+        for(int i=1;i<lengthOfInput;i++){
+            tempLength--;
+            sumofList=sumofList-inputList.get(i-1);
+            tempSum=sumofList;
+            maxIndexToAdd = getTheMaxIndexToAddWhenLengthIsKnown(tempLength);
+            numberOfElementsToRemove = tempLength-maxIndexToAdd;
+            if(numberOfElementsToRemove>0){
+                int lastIndex = lengthOfInput-1;
+                while(numberOfElementsToRemove>0){
+                    tempSum-=inputList.get(lastIndex--);
+                    numberOfElementsToRemove--;
+                }
+            }
+            if(tempSum>max){
+                max=tempSum;
+            }
+        }
+        System.out.println(max);
+        end =System.nanoTime();
+        long timeTaken = (end-start)/1000000;
+        System.out.println("TestClass:main: TimeTaken: "+Long.toString(timeTaken)+" ms");
+    }
+
+
+    public static int getMaxTermToAdd(int length){
+        //this is simple quadratic equation
+        //value of x = {-b +or- sqrt[(b*b)-(4*a*c)]}/(2*a)
+        //since the pattren is 1,3,6,10,15 -> represents numberofdots or in our case length
+        //this pattern is obtained using the formula Xn = {[n(n+1)]/2} and we should find n given Xn or length
+        //Therefore n^2+n-2*length=0 is the equation
+
+        int a=1,b=1;
+        int c = (length*2)*-1;
+        int result=1;
+
+        //disc
+        long discriminant = 1-(4*c);
+        if(discriminant>0){
+            //taking only the positive term
+            result = (int)Math.floor((-1+Math.sqrt(discriminant))/2);
+        }
+        return result;
+    }
+
+    public static int getTheMaxIndexToAddWhenLengthIsKnown(int length){
+        return sumOfNNaturalNumbers(getMaxTermToAdd(length));
+    }
+
+    public static int sumOfNNaturalNumbers(int n){
+        int sum=0;
+        for(int i=1;i<=n;i++){
+            sum+=i;
+        }
+        return sum;
+    }
+
+    public static long sumofList(List<Integer> integerList,int toIndex){
+        long sum=0;
+        for(int i=0;i<toIndex;i++){
+            sum+=integerList.get(i);
+        }
+        return sum;
+    }
 }
