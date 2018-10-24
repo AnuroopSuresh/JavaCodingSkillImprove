@@ -91,5 +91,10 @@ public class UtilsFunction {
         );
     }
 
+    public static void computeTimeTakenMillSec(long start,long end){
+        long timeTaken = (end-start)/1000000;
+        System.out.println("Time Taken : "+Long.toString(timeTaken));
+    }
+
 
 }
