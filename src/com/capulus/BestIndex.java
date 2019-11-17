@@ -119,13 +119,14 @@ public class BestIndex {
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         long start,end;
-
         int lengthOfInput = Integer.parseInt(br.readLine());
         String[] inputNumberStringArray = br.readLine().split("\\s+");
         ArrayList<Integer> inputList = new ArrayList<>();
         for(String numberString:inputNumberStringArray){
             inputList.add(Integer.parseInt(numberString));
         }
+
+        
         start = System.nanoTime();
         long sumofList = sumofList(inputList,lengthOfInput);
         long initialSum = sumofList;
@@ -138,7 +139,7 @@ public class BestIndex {
         }
         long max = initialSum,tempSum=0;
         int tempLength = lengthOfInput;
-
+        
         for(int i=1;i<lengthOfInput;i++){
             tempLength--;
             sumofList=sumofList-inputList.get(i-1);

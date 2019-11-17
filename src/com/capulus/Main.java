@@ -7,6 +7,8 @@ import java.util.concurrent.*;
 
 public class Main {
 
+    TestClass testClass = new TestClass();
+
     public static final HashMap<Integer,Character> primeASCIIAlpha = createMap();
     public static final List<Integer> onlyValues = Arrays.asList(67,71,73,79,83,89,97,101,103,107,109,113);
 
@@ -30,6 +32,7 @@ public class Main {
     public static void main(String[] args) {
 
         try {
+
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             int testCases = Integer.parseInt(br.readLine());
             if(testCases>=1&&testCases<=100){
