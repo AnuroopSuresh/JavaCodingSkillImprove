@@ -3,6 +3,7 @@ package com.capulus;
 /*Given a single line of string 'S' containing alpha, numeric and symbols, followed by a number '0<=N<=1000'. Encrypt and print the resulting string.
         Note: The cipher only encrypts Alpha and Numeric. (A-Z, a-z, and 0-9) . All Symbols, such as - , ; %, remain unencrypted.
 
+
         SAMPLE INPUT
         All-convoYs-9-be:Alert1.
         4
